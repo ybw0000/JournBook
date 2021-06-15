@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from requests import post
+
 from accounts.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -9,7 +11,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import SignUpForm, ProfileForm
 
 
@@ -87,14 +89,14 @@ def LoginView(request):
 
 def ProfileView(request):
     if request.method == 'POST':
-        form = ProfileForm(request.POST, initial={'first_name':'test'})
+        form = ProfileForm(request.POST, instance=request.user)
         user = request.user
         user.first_name = form['first_name'].value()
         user.last_name = form['last_name'].value()
         user.biography = form['biography'].value()
         user.save()
-        messages.add_message(request, messages.SUCCESS, 'Profile info added successfully')
+        messages.add_message(request, messages.SUCCESS, 'Profile info updated successfully')
         return redirect('index')
     else:
-        form = ProfileForm()
+        form = ProfileForm(instance=request.user)
     return render(request, 'profile.html', context={'form':form})
