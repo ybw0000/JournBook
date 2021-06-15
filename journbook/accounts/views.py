@@ -1,8 +1,7 @@
-import requests
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
-from django.contrib.auth.models import User
+from accounts.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -10,9 +9,8 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-
-from .forms import SignUpForm
 from django.shortcuts import render, redirect
+from accounts.forms import SignUpForm, ProfileForm
 
 
 def sign_up_view(request):
@@ -21,11 +19,10 @@ def sign_up_view(request):
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-            user.is_active = False
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
-            message = render_to_string('registration/new_acc_confirm_template.html', {
+            message = render_to_string('new_acc_confirm_template.html', {
                 'user':user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -38,7 +35,7 @@ def sign_up_view(request):
             return redirect('/')
     else:
         form = SignUpForm()
-    return render(request, 'registration/signup.html', context={'form':form})
+    return render(request, 'signup.html', context={'form':form})
 
 def activate(request, uidb64, token):
         try:
@@ -49,9 +46,12 @@ def activate(request, uidb64, token):
         if user is not None:
             user.is_active = True
             user.save()
+            # username = user.username
+            # password = user.password
+            # user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.add_message(request, messages.SUCCESS, 'Sign up success', extra_tags='sign_up_success')
-            return redirect('/')
+            return redirect('profile')
         else:
             return HttpResponse('Activation link is invalid!')
 
@@ -67,7 +67,7 @@ def PasswordChangeView(request):
             return redirect('/')
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'registration/password_change.html', context={'form':form})
+    return render(request, 'password_change.html', context={'form':form})
 
 def LoginView(request):
     if request.method == 'POST':
@@ -83,4 +83,18 @@ def LoginView(request):
             messages.add_message(request, messages.ERROR, 'Login or password is not correct', extra_tags='login_error')
     else:
         form = AuthenticationForm()
-    return render(request, 'registration/login.html', context={'form': form})
+    return render(request, 'login.html', context={'form': form})
+
+def ProfileView(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, initial={'first_name':'test'})
+        user = request.user
+        user.first_name = form['first_name'].value()
+        user.last_name = form['last_name'].value()
+        user.biography = form['biography'].value()
+        user.save()
+        messages.add_message(request, messages.SUCCESS, 'Profile info added successfully')
+        return redirect('index')
+    else:
+        form = ProfileForm()
+    return render(request, 'profile.html', context={'form':form})
