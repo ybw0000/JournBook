@@ -57,3 +57,9 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=1000, blank=False)
+    pictures = models.ImageField(blank=True, upload_to='images/users/%Y/%m/%d')
+    pub_date = models.DateTimeField(auto_now_add=True)

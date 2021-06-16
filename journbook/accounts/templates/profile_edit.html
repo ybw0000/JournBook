@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% block title %} {{ user.username }} {% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <form action="" method="post">
+            {% csrf_token %}
+            First name
+            {{ form.first_name }}<br>
+            Last name
+            {{ form.last_name }}<br>
+            Biography
+            {{ form.biography }}<br>
+            Username
+            {{ form.username }}<br>
+            Email
+            {{ form.email }}<br>
+            <a href="{% url 'password_change' %}"> Change password</a>
+            <button type="submit">Save</button>
+        </form>
+    {% else %}
+        first u need to sign in
+    {% endif %}
+{% endblock %}

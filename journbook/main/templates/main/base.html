@@ -21,8 +21,8 @@
             {% if user.is_authenticated %}
                 <a class="navbar-text"> Hi {{ user.username }}!</a>
                 <a class="nav-item nav-link" href="{% url 'logout' %}" >Log Out</a>
-                <a class="nav-item nav-link" href="{% url 'password_change' %}">Change password</a>
-                <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'profile_edit' %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'create_post' %}">Create post</a>
             {% else %}
                 <a class="nav-item nav-link" href="{% url 'login' %}">Log In</a>
                 <a class="nav-item nav-link" id="signup_button" href="{% url 'signup' %}">Sign up</a>
@@ -34,7 +34,7 @@
     </div>
   </div>
 </nav>
-{% if messages %} {# asdsadsadsad #}
+{% if messages %}
     {% for message in messages %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}

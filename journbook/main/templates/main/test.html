@@ -1,3 +1,11 @@
+{% load static %}
+
 <div>
-    {{ message }}
+    {% for post in posts %}
+        <a href="{% url 'profile' id=user.id %}">{{ post.author.username }}</a><br>
+        {{ post.text }}<br>
+        <img src="{{ post.pictures.url }}" alt="{{ post.pictures.url }}">
+        {{ post.pub_date }}<br>
+        <br>
+    {% endfor %}
 </div>

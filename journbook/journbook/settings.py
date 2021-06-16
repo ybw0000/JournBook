@@ -155,3 +155,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'journbook0000@gmail.com'
 EMAIL_HOST_PASSWORD = '1234QWERasdfzxcv'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

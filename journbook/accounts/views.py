@@ -1,9 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
-from requests import post
-
-from accounts.models import User
+from accounts.models import User, Post
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -11,8 +9,8 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.shortcuts import render, redirect, get_object_or_404
-from accounts.forms import SignUpForm, ProfileForm
+from django.shortcuts import render, redirect
+from accounts.forms import SignUpForm, ProfileEditForm, CreatePostForm
 
 
 def sign_up_view(request):
@@ -53,7 +51,7 @@ def activate(request, uidb64, token):
             # user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.add_message(request, messages.SUCCESS, 'Sign up success', extra_tags='sign_up_success')
-            return redirect('profile')
+            return redirect('profile_edit')
         else:
             return HttpResponse('Activation link is invalid!')
 
@@ -87,9 +85,9 @@ def LoginView(request):
         form = AuthenticationForm()
     return render(request, 'login.html', context={'form': form})
 
-def ProfileView(request):
+def ProfileEditView(request):
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user)
+        form = ProfileEditForm(request.POST, instance=request.user)
         user = request.user
         user.first_name = form['first_name'].value()
         user.last_name = form['last_name'].value()
@@ -98,5 +96,52 @@ def ProfileView(request):
         messages.add_message(request, messages.SUCCESS, 'Profile info updated successfully')
         return redirect('index')
     else:
-        form = ProfileForm(instance=request.user)
-    return render(request, 'profile.html', context={'form':form})
+        form = ProfileEditForm(instance=request.user)
+    return render(request, 'profile_edit.html', context={'form':form})
+
+def ProfileView(request, id):
+    if request.method == 'POST':
+        user = User.objects.filter(pk = id)
+        return redirect(request, 'profile.html', locals())
+    else:
+        user = User.objects.filter(pk = id)
+    return render(request, 'profile.html', locals())
+
+# def CreatePostView(request):
+#     if request.method == 'POST':
+#         # form = CreatePostForm(request.POST)
+#         # if form.is_valid():
+#             print('-' * 100)
+#             print(request.FILES)
+#             print(request.POST)
+#             post_new = Post.objects.create(
+#                 author=request.user,
+#                 text=request.POST['text'],
+#                 pictures=request.POST['pictures']
+#             )
+#             print(request.FILES)
+#             print(request.POST)
+#             print('-' * 100)
+#             post_new.save()
+#             messages.add_message(request, messages.SUCCESS, 'Post added successfully')
+#             return redirect('index')
+#         # else:
+#         #     messages.add_message(request, messages.ERROR, 'Form is not valid')
+#         #     return render(request, 'create_post.html', context={'form':form})
+#     else:
+#         form = CreatePostForm()
+#     return render(request, 'create_post.html', context={'form': form})
+
+def CreatePostView(request):
+    if request.method == 'POST':
+        # form = CreatePostForm(request.POST, request.FILES)
+        # if form.is_valid():
+            instance = Post(pictures=request.FILES['pictures'], author=request.user, text=request.POST['text'])
+            instance.save()
+            return redirect('index')
+        # else:
+        #     messages.add_message(request, messages.ERROR, 'Form is not valid')
+        #     return render(request, 'create_post.html', context={'form':form})
+    # else:
+        # form = CreatePostForm()
+    return render(request, 'create_post.html')
