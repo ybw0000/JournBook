@@ -8,5 +8,4 @@ urlpatterns = [
     path('activate/<uidb64>/<token>', views.activate, name = 'activate'),
     path('profile/edit/', views.ProfileEditView, name = 'profile_edit'),
     path('profile/<id>', views.ProfileView, name = 'profile'),
-    path('create_post/', views.CreatePostView, name = 'create_post'),
 ]

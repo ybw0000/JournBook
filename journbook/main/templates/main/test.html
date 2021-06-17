@@ -4,7 +4,7 @@
     {% for post in posts %}
         <a href="{% url 'profile' id=user.id %}">{{ post.author.username }}</a><br>
         {{ post.text }}<br>
-        <img src="{{ post.pictures.url }}" alt="{{ post.pictures.url }}">
+        <img src="{{ post.picture.url }}" alt="Not found" style="width: 200px;"><br>
         {{ post.pub_date }}<br>
         <br>
     {% endfor %}

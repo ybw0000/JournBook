@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'main',
     'accounts',
+    'post',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,8 +136,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'main/static',
+    BASE_DIR / 'main/static/',
     BASE_DIR / 'accounts/static/',
+    BASE_DIR / 'post/static/'
 ]
 
 # Default primary key field type
@@ -155,5 +157,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'journbook0000@gmail.com'
 EMAIL_HOST_PASSWORD = '1234QWERasdfzxcv'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
