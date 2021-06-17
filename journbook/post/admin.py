@@ -1,6 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Post, Like
+from .models import Post, Like, Comment
 
-admin.site.register(Post)
+# admin.site.register(Post)
 admin.site.register(Like)
+admin.site.register(Comment)
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('test', )
+
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+
+    def test(self, object):
+        return f'{object.author} - {object.text}'
