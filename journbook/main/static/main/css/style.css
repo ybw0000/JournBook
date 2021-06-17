@@ -6,3 +6,10 @@
     margin-left: 10%;
 }
 
+.positive {
+    --button-bg: green;
+}
+
+.negative {
+    --button-bg: red;
+}

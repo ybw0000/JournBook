@@ -6,6 +6,16 @@
         {{ post.text }}<br>
         <img src="{{ post.picture.url }}" alt="Not found" style="width: 200px;"><br>
         {{ post.pub_date }}<br>
+        <form action="{% url 'like-post' %}" method="post">
+        {% csrf_token %}
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+            {% if user not in post.liked.all %}
+                <button type="submit" style="background: white;">Like</button>
+            {% else %}
+                <button type="submit" style="background: red;">Unlike</button>
+            {% endif %}
+        </form>
+        <strong>{{ post.liked.all.count }}</strong>
         <br>
     {% endfor %}
 </div>
