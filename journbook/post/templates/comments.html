@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+
+{% block title %} {{ post.author.username }} {% endblock %}
+
+{% block content %}
+    {{ post.author }}<br>
+    <img src="{{ post.picture.url }}" alt=""><br>
+    {{ post.text }}<br>
+    {{ post.pub_date }}<br>
+
+    <form action="{% url 'like-post' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="post_id" value="{{ post.id }}">
+        {% if user not in post.liked.all %}
+            <button type="submit" style="background: white;">Like</button>
+        {% else %}
+            <button type="submit" style="background: red;">Unlike</button>
+        {% endif %}
+    </form>
+    <strong>{{ post.liked.all.count }}</strong>
+    <br>
+
+    {% for comment in comments %}
+        {{ comment.user.username }}<br>
+        {{ comment.comment_text }}<br>
+    {% endfor %}
+
+    <form action="{% url 'leave-comment' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="post_id" value="{{ post.id }}">
+        <input type="text" name="comment_text">
+        <button type="submit">Leave comment</button>
+    </form>
+
+
+
+{% endblock %}
