@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
-from accounts.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -11,6 +10,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import render, redirect
 from accounts.forms import SignUpForm, ProfileEditForm
+from accounts.models import User, UserFollow
 
 
 def sign_up_view(request):
@@ -37,6 +37,7 @@ def sign_up_view(request):
         form = SignUpForm()
     return render(request, 'signup.html', context={'form':form})
 
+
 def activate(request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
@@ -55,6 +56,7 @@ def activate(request, uidb64, token):
         else:
             return HttpResponse('Activation link is invalid!')
 
+
 def PasswordChangeView(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -68,6 +70,7 @@ def PasswordChangeView(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'password_change.html', context={'form':form})
+
 
 def LoginView(request):
     if request.method == 'POST':
@@ -85,6 +88,7 @@ def LoginView(request):
         form = AuthenticationForm()
     return render(request, 'login.html', context={'form': form})
 
+
 def ProfileEditView(request):
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, instance=request.user)
@@ -99,10 +103,38 @@ def ProfileEditView(request):
         form = ProfileEditForm(instance=request.user)
     return render(request, 'profile_edit.html', context={'form':form})
 
+
 def ProfileView(request, id):
+    user = User.objects.get(id = id)
+    fol, created = UserFollow.objects.get_or_create(following_id=user,
+                                                    follower_id=request.user)
+
+    fol.save()
+
+    context = {
+        'profile': user,
+        'fol': fol
+    }
+    return render(request, 'profile.html', context)
+
+
+def follow(request, id):
     if request.method == 'POST':
-        user = User.objects.filter(pk = id)
-        return redirect(request, 'profile.html', locals())
+        following_id = request.POST['following_id']
+        user = User.objects.get(id=following_id)
+        follower = request.user
+
+        fol, created = UserFollow.objects.get_or_create(follower_id=follower,
+                                                        following_id=user)
+
+        if not created:
+            if fol.value == 'Follow':
+                fol.value = 'Unfollow'
+            else:
+                fol.value = 'Follow'
+
+        fol.save()
+
+        return redirect('profile', id)
     else:
-        user = User.objects.filter(pk = id)
-    return render(request, 'profile.html', locals())
+        return render(request, 'profile.html', id)

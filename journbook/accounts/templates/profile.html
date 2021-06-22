@@ -1,23 +1,33 @@
 {% extends 'main/base.html' %}
 
-{% block title %} {{ user.username }} {% endblock %}
+{% block title %} {{ profile.username }} {% endblock %}
 
 {% block content %}
-    {% for i in user %}
-        First name:
-        {{ i.first_name }}
-        <br>
-        Last name:
-        {{ i.last_name }}
-        <br>
-        Biography:
-        {{ i.biography }}
-        <br>
-        Username:
-        {{ i.username }}
-        <br>
-        Email:
-        {{ i.email }}
-        <br>
-    {% endfor %}
+    First name:
+    {{ profile.first_name }}
+    <br>
+    Last name:
+    {{ profile.last_name }}
+    <br>
+    Biography:
+    {{ profile.biography }}
+    <br>
+    Username:
+    {{ profile.username }}
+    <br>
+    Email:
+    {{ profile.email }}
+    <br>
+    {% if profile != user %}
+        <form action="{% url 'follow' id=profile.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="following_id" value="{{ profile.id }}">
+            {% if fol.value == 'Follow' %}
+                <button type="submit">Follow</button>
+            {% else %}
+                <button type="submit" style="background: red;">Unfollow</button>
+            {% endif %}
+        </form>
+    {% endif %}
+
 {% endblock %}

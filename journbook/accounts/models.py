@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -38,7 +39,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(verbose_name='last name', max_length=30)
     biography = models.TextField(verbose_name='biography', max_length=1000)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login =models.DateTimeField(verbose_name='last login', auto_now=True)
+    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -58,3 +59,17 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
+FOLLOW_CHOISES = (
+    ('Follow', 'Follow'),
+    ('Unfollow', 'Unfollow')
+)
+
+
+class UserFollow(models.Model):
+    following_id = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    follower_id = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    value = models.CharField(choices=FOLLOW_CHOISES, default='Follow', max_length=10000)
+
+    def __str__(self):
+        return self.following_id.username
