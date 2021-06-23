@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-from django.conf import settings
-from accounts.models import User
 from post.models import Post, Like, Comment
 from post.forms import CommentForm
 
@@ -30,9 +28,9 @@ def index(request):
 
     user = request.user
     return render(request, 'main/index.html', {
-        'posts':all_data,
-        'user':user,
-        'comments':comments,
+        'posts': all_data,
+        'user': user,
+        'comments': comments,
     })
 
 
@@ -40,7 +38,7 @@ def like_post(request):
     user = request.user
     if request.method == 'POST':
         post_id = request.POST['post_id']
-        post_obj = Post.objects.get(id = post_id)
+        post_obj = Post.objects.get(id=post_id)
 
         if user in post_obj.liked.all():
             post_obj.liked.remove(user)
@@ -48,8 +46,8 @@ def like_post(request):
             post_obj.liked.add(user)
 
         like, created = Like.objects.get_or_create(
-            user = user,
-            post_id = post_id
+            user=user,
+            post_id=post_id
         )
 
         if not created:
@@ -63,7 +61,6 @@ def like_post(request):
 
 
 def leave_comment(request):
-
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -71,9 +68,9 @@ def leave_comment(request):
             post_id = request.POST['post_id']
 
             comment = Comment.objects.create(
-                user = user,
-                post_id = post_id,
-                comment_text= request.POST['comment_text']
+                user=user,
+                post_id=post_id,
+                comment_text=request.POST['comment_text']
             )
 
             comment.save()
@@ -82,7 +79,7 @@ def leave_comment(request):
 
 def comments(request):
     post = Post.objects.get(id=request.POST['post_id'])
-    comments = Comment.objects.filter(post_id = post.id)
+    comments = Comment.objects.filter(post_id=post.id)
     context = {
         'post': post,
         'comments': comments

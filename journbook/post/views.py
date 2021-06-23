@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.core.files.storage import FileSystemStorage
 
 from .forms import CreatePostForm
 
@@ -18,4 +17,4 @@ def create_post_view(request):
             messages.add_message(request, messages.ERROR, 'Form is not valid')
     else:
         form = CreatePostForm()
-    return render(request, 'create_post.html', {'form':form})
+    return render(request, 'create_post.html', {'form': form})

@@ -23,41 +23,43 @@ def sign_up_view(request):
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
             message = render_to_string('new_acc_confirm_template.html', {
-                'user':user,
+                'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(mail_subject, message, to = [to_email])
+            email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
-            messages.add_message(request, messages.SUCCESS, 'Please confirm your email address. Email was sent to your entered email address', extra_tags='signup_confirm')
+            messages.add_message(request, messages.SUCCESS,
+                                 'Please confirm your email address. Email was sent to your entered email address',
+                                 extra_tags='signup_confirm')
             return redirect('/')
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', context={'form':form})
+    return render(request, 'signup.html', context={'form': form})
 
 
 def activate(request, uidb64, token):
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        if user is not None:
-            user.is_active = True
-            user.save()
-            # username = user.username
-            # password = user.password
-            # user = authenticate(request, username=username, password=password)
-            login(request, user)
-            messages.add_message(request, messages.SUCCESS, 'Sign up success', extra_tags='sign_up_success')
-            return redirect('profile_edit')
-        else:
-            return HttpResponse('Activation link is invalid!')
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None:
+        user.is_active = True
+        user.save()
+        # username = user.username
+        # password = user.password
+        # user = authenticate(request, username=username, password=password)
+        login(request, user)
+        messages.add_message(request, messages.SUCCESS, 'Sign up success', extra_tags='sign_up_success')
+        return redirect('profile_edit')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 
-def PasswordChangeView(request):
+def password_change_view(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -69,15 +71,15 @@ def PasswordChangeView(request):
             return redirect('/')
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'password_change.html', context={'form':form})
+    return render(request, 'password_change.html', context={'form': form})
 
 
-def LoginView(request):
+def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username = username, password = password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             messages.add_message(request, messages.SUCCESS, 'Login success', extra_tags='login_success')
@@ -89,7 +91,7 @@ def LoginView(request):
     return render(request, 'login.html', context={'form': form})
 
 
-def ProfileEditView(request):
+def profile_edit_view(request):
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, instance=request.user)
         user = request.user
@@ -101,11 +103,11 @@ def ProfileEditView(request):
         return redirect('index')
     else:
         form = ProfileEditForm(instance=request.user)
-    return render(request, 'profile_edit.html', context={'form':form})
+    return render(request, 'profile_edit.html', context={'form': form})
 
 
-def ProfileView(request, id):
-    user = User.objects.get(id = id)
+def profile_view(request, id):
+    user = User.objects.get(id=id)
     fol, created = UserFollow.objects.get_or_create(following_id=user,
                                                     follower_id=request.user)
 
