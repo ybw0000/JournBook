@@ -3,5 +3,7 @@
 {% block title %} Feed {% endblock %}
 
 {% block content %}
-    {% include 'main/test.html' with posts=posts %}
+    <div class="feed">
+        {% include 'main/feed.html' with posts=posts %}
+    </div>
 {% endblock %}
