@@ -1,9 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import CreatePostForm
 
 
+@login_required
 def create_post_view(request):
     if request.method == 'POST':
         form = CreatePostForm(request.POST, request.FILES)

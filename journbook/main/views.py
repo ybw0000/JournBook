@@ -1,9 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from post.models import Post, Like, Comment
 from post.forms import CommentForm
 
 
+@login_required
 def index(request):
     if request.method == 'POST':
         return render(request, 'index.html')
@@ -11,6 +13,7 @@ def index(request):
         return render(request, 'index.html')
 
 
+@login_required
 def index(request):
     if request.user.is_authenticated == True:
         posts = Post.objects.all()
@@ -39,7 +42,7 @@ def index(request):
         return redirect('login')
 
 
-
+@login_required
 def like_post(request):
     user = request.user
     if request.method == 'POST':
@@ -66,6 +69,7 @@ def like_post(request):
     return redirect('index')
 
 
+@login_required
 def leave_comment(request):
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -83,6 +87,7 @@ def leave_comment(request):
     return redirect('index')
 
 
+@login_required
 def comments(request):
     post = Post.objects.get(id=request.POST['post_id'])
     comments = Comment.objects.filter(post_id=post.id)

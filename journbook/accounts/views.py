@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -59,6 +60,7 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 
+@login_required
 def password_change_view(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -91,6 +93,7 @@ def login_view(request):
     return render(request, 'login.html', context={'form': form})
 
 
+@login_required
 def profile_edit_view(request):
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, instance=request.user)
@@ -106,6 +109,7 @@ def profile_edit_view(request):
     return render(request, 'profile_edit.html', context={'form': form})
 
 
+@login_required
 def profile_view(request, id):
     user = User.objects.get(id=id)
     fol, created = UserFollow.objects.get_or_create(following_id=user,
@@ -120,6 +124,7 @@ def profile_view(request, id):
     return render(request, 'profile.html', context)
 
 
+@login_required
 def follow(request, id):
     if request.method == 'POST':
         following_id = request.POST['following_id']
