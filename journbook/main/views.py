@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from post.models import Post, Like, Comment
 from post.forms import CommentForm
@@ -5,33 +6,38 @@ from post.forms import CommentForm
 
 def index(request):
     if request.method == 'POST':
-        return render(request, 'main/index.html')
+        return render(request, 'index.html')
     else:
-        return render(request, 'main/index.html')
+        return render(request, 'index.html')
 
 
 def index(request):
-    posts = Post.objects.all()
-    all_data = []
-    for post in posts:
-        all_data.append(
-            {
-                'text': post.text,
-                'author': post.author,
-                'picture': post.picture,
-                'pub_date': post.pub_date,
-                'id': post.id,
-                'liked': post.liked,
-                'comments': Comment.objects.filter(post_id=post.id).order_by('-id')[:2]
-            }
-        )
+    if request.user.is_authenticated == True:
+        posts = Post.objects.all()
+        all_data = []
+        for post in posts:
+            all_data.append(
+                {
+                    'text': post.text,
+                    'author': post.author,
+                    'picture': post.picture,
+                    'pub_date': post.pub_date,
+                    'id': post.id,
+                    'liked': post.liked,
+                    'comments': Comment.objects.filter(post_id=post.id).order_by('-id')[:2]
+                }
+            )
 
-    user = request.user
-    return render(request, 'main/index.html', {
-        'posts': all_data,
-        'user': user,
-        'comments': comments,
-    })
+        user = request.user
+        return render(request, 'main/index.html', {
+            'posts': all_data,
+            'user': user,
+            'comments': comments,
+        })
+    else:
+        messages.add_message(request, messages.ERROR, 'First u need to log in')
+        return redirect('login')
+
 
 
 def like_post(request):

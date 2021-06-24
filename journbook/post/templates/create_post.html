@@ -4,11 +4,15 @@
 
 {% block content %}
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" name="text">
-        <input type="file" name="picture" accept="image/*">
-        <button type="submit">Post</button>
+    <form method="post" enctype="multipart/form-data" class="login_form">
+        <div class="login_form_content post_text">
+            {% csrf_token %}
+            Post text
+            <input type="text" name="text">
+            Image
+            <input type="file" name="picture" accept="image/*">
+            <button type="submit">Post</button>
+        </div>
     </form>
 
 {% endblock %}

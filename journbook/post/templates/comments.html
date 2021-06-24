@@ -3,35 +3,48 @@
 {% block title %} {{ post.author.username }} {% endblock %}
 
 {% block content %}
-    {{ post.author }}<br>
-    <img src="{{ post.picture.url }}" alt=""><br>
-    {{ post.text }}<br>
-    {{ post.pub_date }}<br>
+    <div class="post_detail">
+        <div class="post_info">
+            {{ post.author.username }}<br>
+            <img src="{{ post.picture.url }}" alt="" class="picture"><br>
+            {{ post.text }}<br>
+            {{ post.pub_date }}
+            <form action="{% url 'like-post' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                {% if user not in post.liked.all %}
+                    <button type="submit" class="like_button">
+                        <i class="far fa-heart"></i>
+                    </button>
+                {% else %}
+                    <button type="submit" class="like_button">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                {% endif %}
+                {% if post.liked.all.count == 1 %}
+                    <strong>{{ post.liked.all.count }} like</strong>
+                {% else %}
+                    <strong>{{ post.liked.all.count }} likes</strong>
+                {% endif %}
+            </form>
+        </div>
+        <br>
+        <div class="comments">
+            {% for comment in comments %}
+                <div class="comment">
+                    <a class="comment_author" href="{% url 'profile' id=comment.user.id %}">{{ comment.user.username }}</a>
+                    {{ comment.comment_text }}<br>
+                </div>
+            {% endfor %}
+            <form action="{% url 'leave-comment' %}" method="post" class="leave_comment_form">
+                <div class="leave_comment">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <input type="text" name="comment_text" class="leave_comment_text">
+                    <button type="submit" class="leave_comment_button">Leave comment</button>
 
-    <form action="{% url 'like-post' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="post_id" value="{{ post.id }}">
-        {% if user not in post.liked.all %}
-            <button type="submit" style="background: white;">Like</button>
-        {% else %}
-            <button type="submit" style="background: red;">Unlike</button>
-        {% endif %}
-    </form>
-    <strong>{{ post.liked.all.count }}</strong>
-    <br>
-
-    {% for comment in comments %}
-        {{ comment.user.username }}<br>
-        {{ comment.comment_text }}<br>
-    {% endfor %}
-
-    <form action="{% url 'leave-comment' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="post_id" value="{{ post.id }}">
-        <input type="text" name="comment_text">
-        <button type="submit">Leave comment</button>
-    </form>
-
-
-
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,46 @@
+.post_info {
+    display: flex;
+    margin-left: 5%;
+    margin-right: 5%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post_detail {
+    border: 3px solid whitesmoke;
+    border-radius: 5px;
+    color: whitesmoke;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.comments {
+    border: 3px solid whitesmoke;
+    border-radius: 5px;
+    color: whitesmoke;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.leave_comment_form {
+    border: 3px solid whitesmoke;
+    border-radius: 5px;
+    display: flex;
+}
+
+.leave_comment {
+    display: flex;
+    flex-grow: 6;
+}
+
+.leave_comment_text {
+    margin-left: 0%;
+    margin-right: 0%;
+    flex-grow: 5;
+    text-align: left;
+}
+.leave_comment_button {
+    flex-grow: 1;
+}
