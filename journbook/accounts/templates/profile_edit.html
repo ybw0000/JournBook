@@ -8,11 +8,11 @@
             <div class="login_form_content">
                 {% csrf_token %}
                 First name <br>
-                <input type="text" name="first_name"><br>
+                <input type="text" name="first_name" value="{{ user.first_name }}"><br>
                 Last name <br>
-                <input type="text" name="last_name"><br>
+                <input type="text" name="last_name" value="{{ user.last_name }}"><br>
                 Biography <br>
-                <textarea name="biography" id="" cols="30" rows="10"></textarea><br>
+                <textarea name="biography" id="" cols="30" rows="10"> {{ user.biography }}</textarea><br>
                 Username <br>
                 <input type="text" name="username" value="{{ user.username }}"><br>
                 Email <br>

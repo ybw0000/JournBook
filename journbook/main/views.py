@@ -16,7 +16,7 @@ def index(request):
 @login_required
 def index(request):
     if request.user.is_authenticated == True:
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-id')[::1]
         all_data = []
         for post in posts:
             all_data.append(
