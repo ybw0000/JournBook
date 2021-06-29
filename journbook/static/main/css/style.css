@@ -1,0 +1,139 @@
+.navbar-text {
+    text-decoration: none;
+}
+
+.navbar-brand {
+    margin-left: 10%;
+}
+
+body {
+    background: dimgrey;
+}
+
+.feed {
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+
+}
+
+.post {
+    display: flex;
+    border: 3px solid whitesmoke;
+    flex-direction: column;
+    color: whitesmoke;
+    border-radius: 5px;
+}
+
+.picture {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.wrapper {
+    display: flex;
+    margin-left: 5%;
+    flex-direction: column;
+}
+
+a {
+    color: whitesmoke;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.author {
+    margin-left: 10%;
+}
+
+.pub_date {
+    margin-left: auto;
+    margin-right: 5%;
+}
+
+.post_text {
+    color: whitesmoke;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.comment {
+    color: whitesmoke;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.comment_author {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.comment_author:hover {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.like_button {
+    text-decoration: none;
+    background: none;
+    text-shadow: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+.like_image {
+    width: 35px;
+    height: 35px;
+}
+
+.comment_button {
+    text-decoration: none;
+    background: none;
+    text-shadow: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+hr {
+    border: none;
+    padding: 0;
+    margin: 5px;
+}
+
+.profile_view {
+    margin-top: 5%;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-left: 25%;
+    margin-right: 25%;
+
+}
+
+.profile_view_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10%;
+}
+
+.profile_button {
+    width: 100%;
+    text-decoration: none;
+    border: 3px solid black;
+    border-radius: 5px;
+    background: whitesmoke;
+}
+
+.post_text {
+    color: whitesmoke;
+}

@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block title %} {{ user.username }} {% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <form action="" method="post" class="login_form">
+            <div class="login_form_content">
+                {% csrf_token %}
+                First name <br>
+                <input type="text" name="first_name" value="{{ user.first_name }}"><br>
+                Last name <br>
+                <input type="text" name="last_name" value="{{ user.last_name }}"><br>
+                Biography <br>
+                <textarea name="biography" id="" cols="30" rows="10"> {{ user.biography }}</textarea><br>
+                Username <br>
+                <input type="text" name="username" value="{{ user.username }}"><br>
+                Email <br>
+                <input type="email" name="email" value="{{ user.email }}"><br>
+                <br>
+                <a href="{% url 'password_change' %}"> Change password</a><br>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    {% else %}
+        first u need to sign in
+    {% endif %}
+{% endblock %}

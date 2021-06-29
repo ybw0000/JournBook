@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block title %} {{ profile.username }} {% endblock %}
+
+{% block content %}
+    <div class="profile_view">
+        <div class="profile_view_content">
+            First name: {{ profile.first_name }}<br>
+            Last name: {{ profile.last_name }}<br>
+            Biography: {{ profile.biography }}<br>
+            Username: {{ profile.username }}<br>
+            Email: {{ profile.email }}<br>
+            <div class="profile_view_form">
+                {% if profile != user %}
+                    <form action="{% url 'follow' id=profile.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="following_id" value="{{ profile.id }}">
+                        {% if fol.value == 'Follow' %}
+                            <button type="submit" class="profile_button">Follow</button>
+                        {% else %}
+                            <button type="submit" class="profile_button">Unfollow</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
